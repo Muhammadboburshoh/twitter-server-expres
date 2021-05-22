@@ -30,8 +30,9 @@ mainSocket.on('connection', socket => {
   socket.on('disconnect', ()=> console.log('Disconnect main server'))
 
   socket.on('send_mesage', message => {
-    console.log(message);
-    
+
+    socket.broadcast.emit('reseive_message', message)
+
   })
 })
 

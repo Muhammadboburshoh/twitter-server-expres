@@ -17,8 +17,16 @@ app.use(function (_, res, next) {
     next();
 });
 var server = http_1.default.createServer(app);
-var IO = new socket_io_1.Server(server, {
+var io = new socket_io_1.Server(server, {
     path: '/socket'
+});
+var mainSocket = io.of('/main');
+mainSocket.on('connection', function (socket) {
+    console.log('New connect main server...', Math.random());
+    socket.on('disconnect', function () { return console.log('Disconnect main server'); });
+    socket.on('send_mesage', function (message) {
+        socket.broadcast.emit('reseive_message', message);
+    });
 });
 app.get('/', function (req, res) { return res.send("OK"); });
 server.listen(PORT, function () { return console.log(PORT); });
