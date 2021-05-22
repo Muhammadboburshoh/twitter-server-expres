@@ -28,6 +28,11 @@ mainSocket.on('connection', socket => {
   console.log('New connect main server...', Math.random())
 
   socket.on('disconnect', ()=> console.log('Disconnect main server'))
+
+  socket.on('send_mesage', message => {
+    console.log(message);
+    
+  })
 })
 
 
