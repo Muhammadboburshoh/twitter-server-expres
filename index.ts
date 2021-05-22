@@ -5,10 +5,31 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const app = express()
 const PORT = process.env.PORT || 4000
+const app = express()
+
+app.use((_, res, next) => {
+
+  res.send({
+    'Acces-Controll-Allow-Origin': '*',
+  })
+  next()
+})
 
 const server = http.createServer(app)
+
+const io = new Server(server, {
+  path: '/socket'
+})
+
+const mainSocket = io.of('/main')
+
+mainSocket.on('connection', socket => {
+  console.log('New connect main server...', Math.random())
+
+  socket.on('disconnect', ()=> console.log('Disconnect main server'))
+})
+
 
 app.get('/', (req, res) => res.send("OK"))
 
