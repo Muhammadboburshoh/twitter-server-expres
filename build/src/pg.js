@@ -39,50 +39,83 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var jwt_1 = require("../../jwt");
-var model_1 = __importDefault(require("./model"));
-var router = express_1.Router();
-router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, e_1;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
-            case 0:
-                _c.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, jwt_1.verify(req.headers.access_token)];
-            case 1:
-                _c.sent();
-                _b = (_a = res).send;
-                return [4 /*yield*/, model_1.default.many()];
-            case 2:
-                _b.apply(_a, [_c.sent()]);
-                return [3 /*break*/, 4];
-            case 3:
-                e_1 = _c.sent();
-                console.log(e_1);
-                res.statusMessage = e_1.message;
-                res.status(403).end();
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
+exports.rows = exports.row = void 0;
+var dotenv_1 = __importDefault(require("dotenv"));
+var pg_1 = require("pg");
+dotenv_1.default.config();
+var host = process.env.PG_HOST || 'localhost';
+var user = process.env.PG_USER || 'postgres';
+var password = process.env.PG_PWD || '';
+var database = process.env.PG_DATABASE || 'postgres';
+var port = process.env.PG_PORT || '5432 ';
+var pool = new pg_1.Pool({
+    host: host,
+    user: user,
+    password: password,
+    database: database,
+    port: port
+});
+var rows = function (SQL) {
+    var params = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        params[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var clint, rows_1, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, pool.connect()];
+                case 1:
+                    clint = _a.sent();
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 4, 5, 6]);
+                    return [4 /*yield*/, clint.query(SQL, params)];
+                case 3:
+                    rows_1 = (_a.sent()).rows;
+                    return [2 /*return*/, rows_1];
+                case 4:
+                    e_1 = _a.sent();
+                    console.error(e_1);
+                    return [3 /*break*/, 6];
+                case 5:
+                    clint.release();
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
+            }
+        });
     });
-}); });
-router.post('/signin', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, accessToken;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, model_1.default.signin(req.body)];
-            case 1:
-                user = _a.sent();
-                if (user) {
-                    accessToken = jwt_1.sign(user);
-                    res.status(201).send({ user: user, accessToken: accessToken });
-                }
-                else {
-                    res.status(401).end();
-                }
-                return [2 /*return*/];
-        }
+};
+exports.rows = rows;
+var row = function (SQL) {
+    var params = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        params[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var clint, row_1, e_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, pool.connect()];
+                case 1:
+                    clint = _a.sent();
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 4, 5, 6]);
+                    return [4 /*yield*/, clint.query(SQL, params)];
+                case 3:
+                    row_1 = (_a.sent()).rows[0];
+                    return [2 /*return*/, row_1];
+                case 4:
+                    e_2 = _a.sent();
+                    console.error(e_2);
+                    return [3 /*break*/, 6];
+                case 5:
+                    clint.release();
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
+            }
+        });
     });
-}); });
-exports.default = router;
+};
+exports.row = row;

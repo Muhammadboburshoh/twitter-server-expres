@@ -6,7 +6,6 @@ const router = Router()
 
 router.get('/', async (req, res) => {
 
-  console.log(req.headers)
   try {
 
     await verify(req.headers.access_token)

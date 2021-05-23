@@ -11,6 +11,7 @@ var routes_1 = __importDefault(require("./src/modules/user/routes"));
 dotenv_1.default.config();
 var PORT = process.env.PORT || 4000;
 var app = express_1.default();
+app.use(express_1.default.json());
 app.use(function (_, res, next) {
     res.set({
         'Acces-Controll-Allow-Origin': '*',
