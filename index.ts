@@ -3,6 +3,8 @@ import { Server } from "socket.io"
 import express from "express"
 import dotenv from "dotenv"
 
+import user from './src/modules/user/routes'
+
 dotenv.config()
 
 const PORT = process.env.PORT || 4000
@@ -10,11 +12,14 @@ const app = express()
 
 app.use((_, res, next) => {
 
-  res.send({
+  res.set({
     'Acces-Controll-Allow-Origin': '*',
   })
+
   next()
 })
+
+app.use('/user', user)
 
 const server = http.createServer(app)
 
@@ -36,7 +41,5 @@ mainSocket.on('connection', socket => {
   })
 })
 
-
-app.get('/', (req, res) => res.send("OK"))
 
 server.listen(PORT,() => console.log(PORT))

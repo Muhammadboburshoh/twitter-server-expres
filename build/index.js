@@ -7,15 +7,17 @@ var http_1 = __importDefault(require("http"));
 var socket_io_1 = require("socket.io");
 var express_1 = __importDefault(require("express"));
 var dotenv_1 = __importDefault(require("dotenv"));
+var routes_1 = __importDefault(require("./src/modules/user/routes"));
 dotenv_1.default.config();
 var PORT = process.env.PORT || 4000;
 var app = express_1.default();
 app.use(function (_, res, next) {
-    res.send({
+    res.set({
         'Acces-Controll-Allow-Origin': '*',
     });
     next();
 });
+app.use('/user', routes_1.default);
 var server = http_1.default.createServer(app);
 var io = new socket_io_1.Server(server, {
     path: '/socket'
@@ -28,5 +30,4 @@ mainSocket.on('connection', function (socket) {
         socket.broadcast.emit('reseive_message', message);
     });
 });
-app.get('/', function (req, res) { return res.send("OK"); });
 server.listen(PORT, function () { return console.log(PORT); });
