@@ -14,7 +14,7 @@ var app = express_1.default();
 app.use(express_1.default.json());
 app.use(function (_, res, next) {
     res.set({
-        'Acces-Controll-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': "*",
     });
     next();
 });

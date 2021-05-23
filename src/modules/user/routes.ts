@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { sign, verify } from '../../jwt'
 
 import model from "./model"
+
 const router = Router()
 
 router.get('/', async (req, res) => {

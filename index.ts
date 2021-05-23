@@ -15,7 +15,8 @@ app.use(express.json())
 app.use((_, res, next) => {
 
   res.set({
-    'Acces-Controll-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': "*",
+    'Access-Control-Allow-Headers': "Content-Type, access_token",
   })
 
   next()
